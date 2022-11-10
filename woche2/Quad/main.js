@@ -106,7 +106,9 @@ function renderTriangle() {
 
 	// 8. Render
 	gl.clear(gl.COLOR_BUFFER_BIT);
+
 	gl.drawArrays(gl.TRIANGLES, 0, 6);
+	//gl.drawElements(mode, count, type, offset);
 }
 
 main();
