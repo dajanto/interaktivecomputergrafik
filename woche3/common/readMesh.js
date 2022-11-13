@@ -25,7 +25,7 @@ function readMesh(filename, callback) {
                 let resultJson = JSON.parse (jsonContent);
                 callback(resultJson);
                 
-                console.log(JSON.stringify (resultJson, null, 4));
+                //console.log(JSON.stringify (resultJson, null, 4));
             })
         }
     );

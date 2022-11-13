@@ -4,6 +4,9 @@ let positions,
 	colors;
 let posVBO,
 	colorVBO;
+let treeVBO;
+
+
 
 function main() {
 
@@ -23,21 +26,56 @@ function main() {
 	gl.useProgram(program);
 
 
-	/*
-	// TODO set correct filename
 	let files = [
-		"meshes/cube.ply"
+		"abgabe/meshes/cloud.ply",
+		"abgabe/meshes/tree.ply"
 	];
 
-	// TODO write mesh loader
-	readMesh(files, function(model) { 
-		console.log(model);
+	readMesh(files, function(model) {
+		//console.log(model);
+		//console.log(files[0]);
+
+		initTree(model);
+		//initCloud(model);
 	});
-	*/
 
 	initTriangle();
 	renderTriangle();
 };
+
+
+function initTree(json) {
+
+	let vertices = json["meshes"]["0"]["vertices"];
+	console.log(vertices);
+
+	initTreeBuffer(vertices);
+}
+
+//function initCloud(json) {
+//
+//}
+
+function initTreeBuffer(vertices) {
+
+	// Create VBO for positions and activate it
+	treeVBO = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, treeVBO);
+
+	// Fill VBO with positions
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+	// Create VBO for colors and activate it
+	treeVBO = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, treeVBO);
+
+	var indexBuffer = gl.createBuffer();
+	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);
+	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(indices), gl.STATIC_DRAW);
+
+	// Fill VBO with colors
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+}
 
 function initTriangle() {
 
