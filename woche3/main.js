@@ -4,14 +4,21 @@ let positions,
 	colors;
 let posVBO,
 	colorVBO;
-let treeVBO;
+
+// tree
+let treePositions;
+let treeFaces;
+let treePosVBO;
+let treeColors;
+let treeColorVBO;
 
 
+// cloud
 
 function main() {
 
 	// Get canvas and setup WebGL context
-    const canvas = document.getElementById("gl-canvas");
+	const canvas = document.getElementById("gl-canvas");
 	gl = canvas.getContext('webgl2');
 
 	// Configure viewport
@@ -32,50 +39,76 @@ function main() {
 	];
 
 	readMesh(files, function(model) {
+
 		//console.log(model);
 		//console.log(files[0]);
 
 		initTree(model);
-		//initCloud(model);
+		//initCloud();
 	});
 
 	initTriangle();
 	renderTriangle();
 };
 
-
 function initTree(json) {
 
-	let vertices = json["meshes"]["0"]["vertices"];
-	console.log(vertices);
+	treePositions = json["meshes"]["0"]["vertices"];
+	treeFaces = json["meshes"]["0"]["faces"];
 
-	initTreeBuffer(vertices);
+	initTreeBuffer();
+	renderTree();
 }
+
+function initTreeBuffer() {
+	// Create VBO for positions and activate it
+	treePosVBO = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, treePosVBO);
+
+	// Fill VBO with positions
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(treePositions), gl.STATIC_DRAW);
+
+	// Create VBO for colors and activate it
+	colorVBO = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, colorVBO);
+
+	var indexBuffer = gl.createBuffer();
+	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);
+	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(treeFaces), gl.STATIC_DRAW);
+
+	// Fill VBO with colors
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+}
+
+function renderTree() {
+
+	// Link data in VBO to shader variables
+	gl.bindBuffer(gl.ARRAY_BUFFER, treePosVBO);
+	const posLoc = gl.getAttribLocation(program, "vPosition");
+	gl.enableVertexAttribArray(posLoc);
+	// 2. Change number of components per position to 3
+	gl.vertexAttribPointer(posLoc, 3, gl.FLOAT, false, 0, 0);
+
+	// Link data in VBO to shader variables
+	//gl.bindBuffer(gl.ARRAY_BUFFER, colorVBO);
+	gl.bindBuffer(gl.ARRAY_BUFFER, treePosVBO);
+	const colorLoc = gl.getAttribLocation(program, "vColor");
+	gl.enableVertexAttribArray(colorLoc);
+	gl.vertexAttribPointer(colorLoc, 4, gl.FLOAT, false, 0, 0);
+
+	// Render
+	// 3. Clear depth buffer before rendering
+	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+	// 4. Match number of vertices to size of new positions array
+	//gl.drawArrays(gl.TRIANGLES, 0, positions.length/3);
+
+	gl.drawElements(gl.TRIANGLES, treeFaces.length, gl.UNSIGNED_SHORT, 0);
+}
+
 
 //function initCloud(json) {
 //
 //}
-
-function initTreeBuffer(vertices) {
-
-	// Create VBO for positions and activate it
-	treeVBO = gl.createBuffer();
-	gl.bindBuffer(gl.ARRAY_BUFFER, treeVBO);
-
-	// Fill VBO with positions
-	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-
-	// Create VBO for colors and activate it
-	treeVBO = gl.createBuffer();
-	gl.bindBuffer(gl.ARRAY_BUFFER, treeVBO);
-
-	var indexBuffer = gl.createBuffer();
-	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);
-	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(indices), gl.STATIC_DRAW);
-
-	// Fill VBO with colors
-	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-}
 
 function initTriangle() {
 
@@ -99,19 +132,19 @@ function initTriangle() {
 		1, 1, 1, -1, 1, 1, -1, 1, -1, 1, 1, -1
 	];
 
-	colors = [ 
-			1, 0, 0, 1,   1, 0, 0, 1,   1, 0, 0, 1, 1,0,0,1,  // Front
-			0, 1, 0, 1,   0, 1, 0, 1,   0, 1, 0, 1, // Right
-			0, 1, 0, 1,   0, 1, 0, 1,   0, 1, 0, 1,
-			0, 0, 1, 1,   0, 0, 1, 1,   0, 0, 1, 1, // Back
-			0, 0, 1, 1,   0, 0, 1, 1,   0, 0, 1, 1,
-			1, 1, 0, 1,   1, 1, 0, 1,   1, 1, 0, 1, // Left 
-			1, 1, 0, 1,   1, 1, 0, 1,   1, 1, 0, 1, 
-			1, 0, 1, 1,   1, 0, 1, 1,   1, 0, 1, 1, // Bottom
-			1, 0, 1, 1,   1, 0, 1, 1,   1, 0, 1, 1,
-			0, 1, 1, 1,   0, 1, 1, 1,   0, 1, 1, 1, // Top
-			0, 1, 1, 1,   0, 1, 1, 1,   0, 1, 1, 1
-		];
+	colors = [
+		1, 0, 0, 1,   1, 0, 0, 1,   1, 0, 0, 1, 1,0,0,1,  // Front
+		0, 1, 0, 1,   0, 1, 0, 1,   0, 1, 0, 1, // Right
+		0, 1, 0, 1,   0, 1, 0, 1,   0, 1, 0, 1,
+		0, 0, 1, 1,   0, 0, 1, 1,   0, 0, 1, 1, // Back
+		0, 0, 1, 1,   0, 0, 1, 1,   0, 0, 1, 1,
+		1, 1, 0, 1,   1, 1, 0, 1,   1, 1, 0, 1, // Left
+		1, 1, 0, 1,   1, 1, 0, 1,   1, 1, 0, 1,
+		1, 0, 1, 1,   1, 0, 1, 1,   1, 0, 1, 1, // Bottom
+		1, 0, 1, 1,   1, 0, 1, 1,   1, 0, 1, 1,
+		0, 1, 1, 1,   0, 1, 1, 1,   0, 1, 1, 1, // Top
+		0, 1, 1, 1,   0, 1, 1, 1,   0, 1, 1, 1
+	];
 
 	indices = [0,1,2,0,1,3,4,5,6,7,4,6];
 
@@ -124,7 +157,7 @@ function initTriangleBuffers() {
 	posVBO = gl.createBuffer();
 	gl.bindBuffer(gl.ARRAY_BUFFER, posVBO);
 
-    // Fill VBO with positions
+	// Fill VBO with positions
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
 	// Create VBO for colors and activate it
@@ -136,7 +169,7 @@ function initTriangleBuffers() {
 	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);
 	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(indices), gl.STATIC_DRAW);
 
-    // Fill VBO with colors
+	// Fill VBO with colors
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
 }
 
@@ -149,8 +182,8 @@ function renderTriangle() {
 	// 2. Change number of components per position to 3
 	gl.vertexAttribPointer(posLoc, 3, gl.FLOAT, false, 0, 0);
 
-    // Link data in VBO to shader variables
-    gl.bindBuffer(gl.ARRAY_BUFFER, colorVBO);
+	// Link data in VBO to shader variables
+	gl.bindBuffer(gl.ARRAY_BUFFER, colorVBO);
 	const colorLoc = gl.getAttribLocation(program, "vColor");
 	gl.enableVertexAttribArray(colorLoc);
 	gl.vertexAttribPointer(colorLoc, 4, gl.FLOAT, false, 0, 0);
