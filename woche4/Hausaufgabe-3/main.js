@@ -129,7 +129,7 @@ function move(event)
 	}
 }
 
-function changeView(e) 
+function changeView(e)
 {
 }
 
@@ -163,6 +163,8 @@ async function main() {
 		// Add your trees and clouds here
 		// Load the island as ply object
 		"meshes/island.ply",
+		"meshes/Wolke.ply",
+		"meshes/Baum.ply"
 	];
 
 	let matrices = [
