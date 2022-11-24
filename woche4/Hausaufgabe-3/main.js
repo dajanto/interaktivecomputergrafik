@@ -100,9 +100,33 @@ function meshConverter(model) {
 }
 
 // TODO 2.8: Erstelle einen Event-Handler, der anhand von WASD-Tastatureingaben
+document.addEventListener("keypress", function(event) {
+
+	event.preventDefault();
+
+	$(document).ready(function () {
+		move(event);
+	});
+});
+
+
 // die View Matrix anpasst
-function move(e) 
+function move(event)
 {
+	switch(event.key) {
+		case "w":
+			console.log("w");
+			break;
+		case "a":
+			console.log("a");
+			break;
+		case "s":
+			console.log("s");
+			break;
+		case "d":
+			console.log("d");
+			break;
+	}
 }
 
 function changeView(e) 
