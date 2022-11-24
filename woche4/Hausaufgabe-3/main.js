@@ -80,6 +80,47 @@ class Mesh {
 	}
 }
 
+function translate(dx, dy, dz) {
+	translationmatrix = [[1,0,0,dx],[0,1,0,dy],[0,0,1,dz],[0,0,0,1]];
+	return translationmatrix;
+}
+
+function rotate(rotation,axis) {
+
+	einheitsmatrix = [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]];
+
+	switch(axis) {
+		case "x":
+			einheitsmatrix[1][1] = Math.cos(rotation);
+			einheitsmatrix[1][2] = Math.sin(rotation) * -1;
+			einheitsmatrix[2][2] = Math.sin(rotation);
+			einheitsmatrix[2][3] = Math.cos(rotation);
+			return einheitsmatrix;
+			break;
+		case "y":
+			einheitsmatrix[0][0] = Math.cos(rotation);
+			einheitsmatrix[0][2] = Math.sin(rotation);
+			einheitsmatrix[2][0] = Math.sin(rotation) * -1;
+			einheitsmatrix[2][3] = Math.cos(rotation);
+			return einheitsmatrix;
+			break;
+		case "z":
+			einheitsmatrix[0][0] = Math.cos(rotation);
+			einheitsmatrix[0][1] = Math.sin(rotation) * -1;
+			einheitsmatrix[1][0] = Math.sin(rotation);
+			einheitsmatrix[1][1] = Math.cos(rotation);
+			return einheitsmatrix;
+			break;
+		default:
+			return einheitsmatrix;
+	}
+
+function skalierung(sx,sy,sz) {
+
+	skalierungsmatrix = [[sx,0,0,0],[0,sy,0,0],[0,0,sz,0],[0,0,0,1]];
+	return skalierungsmatrix;
+}
+
 function meshConverter(model) {
 	// 1. Get positions from the cube
 	let positions = model.meshes[0].vertices;
@@ -183,6 +224,7 @@ async function main() {
 
 	for (let i = 0; i < files.length; i++) {
 		let mesh = await readMeshAsync(files[i], meshConverter);
+		console.log(mesh);
 
 		// TODO 1.3 Implementiere die Funktion setModelMatrix,
 		// welche die Model Matrix des jeweiligen Meshes setzt. 
