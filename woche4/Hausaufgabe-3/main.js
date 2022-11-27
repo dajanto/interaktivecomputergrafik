@@ -17,35 +17,36 @@ class Mesh {
 		this.initalized = false;
 		this.modelMatrix = glMatrix.mat4.create();
 	}
-	
+
 	intialize() {
 		this.initalized = true;
-		
+
 		// Create VBO for positions and activate it
 		this.posVBO = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.posVBO);
-		
+
 		// Fill VBO with positions
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.positions), gl.STATIC_DRAW);
-		
+
 		// Create VBO for colors and activate it
 		this.colorVBO = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.colorVBO);
-		
+
 		// Fill VBO with colors
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.colors), gl.STATIC_DRAW);
-		
+
 		// Create VBO for indices and activate it
 		this.indexVBO = gl.createBuffer();
 		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexVBO);
-		
+
 		// Fill VBO with indices
 		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint32Array(this.indices), gl.STATIC_DRAW);
 	}
-	
+
 	update() {
 		// TODO 2.6
 		// Aktualisiere die Variablen der Vertex und Fragment Shader hier.
+		console.log("update");
 	}
 
 	// TODO 1.3
@@ -116,154 +117,155 @@ function rotate(rotation,axis) {
 	}
 }
 
-	function skalierung(sx, sy, sz) {
+function skalierung(sx, sy, sz) {
 
-		skalierungsmatrix = [[sx, 0, 0, 0], [0, sy, 0, 0], [0, 0, sz, 0], [0, 0, 0, 1]];
-		return skalierungsmatrix;
+	skalierungsmatrix = [[sx, 0, 0, 0], [0, sy, 0, 0], [0, 0, sz, 0], [0, 0, 0, 1]];
+	return skalierungsmatrix;
+}
+
+function meshConverter(model) {
+	// 1. Get positions from the cube
+	let positions = model.meshes[0].vertices;
+
+	// 2. Generate colors for the cube
+	let colors;
+	if (model.meshes[0].colors) {
+		// if the mesh supports colors
+		colors = model.meshes[0].colors.flat()
+	} else {
+		// if not we set one
+		colors = model.meshes[0].vertices.map(x => [1, 0.2, 0.5, 1]).flat()
 	}
 
-	function meshConverter(model) {
-		// 1. Get positions from the cube
-		let positions = model.meshes[0].vertices;
+	// 3. Get indices from the cube and flatten them
+	let indices = model.meshes[0].faces.flat();
+	return new Mesh(positions, colors, indices);
+}
 
-		// 2. Generate colors for the cube
-		let colors;
-		if (model.meshes[0].colors) {
-			// if the mesh supports colors
-			colors = model.meshes[0].colors.flat()
-		} else {
-			// if not we set one
-			colors = model.meshes[0].vertices.map(x => [1, 0.2, 0.5, 1]).flat()
-		}
+// Erstelle einen Event-Handler, der anhand von WASD-Tastatureingaben
+document.addEventListener("keypress", function (event) {
 
-		// 3. Get indices from the cube and flatten them
-		let indices = model.meshes[0].faces.flat();
-		return new Mesh(positions, colors, indices);
-	}
+	event.preventDefault();
 
-// TODO 2.8: Erstelle einen Event-Handler, der anhand von WASD-Tastatureingaben
-	document.addEventListener("keypress", function (event) {
-
-		event.preventDefault();
-
-		$(document).ready(function () {
-			move(event);
-		});
+	$(document).ready(function () {
+		move(event);
 	});
+});
 
 
 // die View Matrix anpasst
-	function move(event) {
-		switch (event.key) {
-			case "w":
-				console.log("w");
-				break;
-			case "a":
-				console.log("a");
-				break;
-			case "s":
-				console.log("s");
-				break;
-			case "d":
-				console.log("d");
-				break;
-		}
+function move(event) {
+	switch (event.key) {
+		case "w":
+			console.log("w");
+			break;
+		case "a":
+			console.log("a");
+			break;
+		case "s":
+			console.log("s");
+			break;
+		case "d":
+			console.log("d");
+			break;
+	}
+}
+
+function changeView(e) {
+}
+
+async function main() {
+
+	// Get canvas and setup WebGL context
+	const canvas = document.getElementById("gl-canvas");
+	gl = canvas.getContext('webgl2');
+
+	// Configure viewport
+	gl.viewport(0, 0, canvas.width, canvas.height);
+	gl.clearColor(1.0, 1.0, 1.0, 1.0);
+
+	// 5. Add depth test
+	gl.enable(gl.DEPTH_TEST);
+
+	// Init shader program via additional function and bind it
+	program = await initShaders(gl, "shaders/simple.vert.glsl", "shaders/simple.frag.glsl");
+	gl.useProgram(program);
+
+	// TODO 2.3: Bestimme Locations der Shadervariablen für Model und View Matrix
+	// TODO 2.4: Erstelle mithilfe der Funktionen aus gl-matrix.js eine initiale View Matrix
+	viewMatrix = glMatrix.mat4.create();
+	//modelMatrix = glMatrix.mat4.create();
+
+	// TODO 2.5: Übergebe die initiale View Matrix an den Shader
+
+	// TODO 2.9: Füge einen Event Listener für Tastatureingaben hinzu
+
+	let files = [
+		// Add your trees and clouds here
+		// Load the island as ply object
+		"meshes/island.ply",
+		"meshes/Wolke.ply",
+		"meshes/Baum.ply"
+	];
+
+	let matrices = [
+		// TODO 1.2
+		// create model matrices for each object
+		glMatrix.mat4.create(),
+	];
+
+	// Render
+	// TODO 1.4
+	// Lösche den Frame vor dem zeichnen.
+	// Denke daran, die Funktion in die render Funktion zu verschieben.
+
+	// 1. Clear depth buffer before rendering
+	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+	for (let i = 0; i < files.length; i++) {
+		let mesh = await readMeshAsync(files[i], meshConverter);
+		console.log(mesh);
+
+		// TODO 1.3 Implementiere die Funktion setModelMatrix,
+		// welche die Model Matrix des jeweiligen Meshes setzt.
+		// mesh.setModelMatrix(matrices[i]);
+
+		meshes.push(mesh);
 	}
 
-	function changeView(e) {
+	// TODO 1.5
+	// Rendere die Meshes innerhalb der render Funktion.
+	for (let i = 0; i < meshes.length; ++i) {
+		// TODO 2.7
+		// Call mesh update function here
+		meshes[i].update();
+		meshes[i].render();
 	}
 
-	async function main() {
+	window.requestAnimationFrame(render);
+};
 
-		// Get canvas and setup WebGL context
-		const canvas = document.getElementById("gl-canvas");
-		gl = canvas.getContext('webgl2');
+function render(timestamp) {
+	const elapsed = timestamp - lastTimestamp;
 
-		// Configure viewport
-		gl.viewport(0, 0, canvas.width, canvas.height);
-		gl.clearColor(1.0, 1.0, 1.0, 1.0);
+	// TODO 2.x
+	// Setze Camera View Matrix
+	glMatrix.mat4.multiply(modelViewProjection, projectionMatrix, viewMatrix);
+	let viewLoc = gl.getUniformLocation(program, "viewMatrix");
+	gl.uniformMatrix4fv(viewLoc, false, modelViewProjection);
 
-		// 5. Add depth test
-		gl.enable(gl.DEPTH_TEST);
+	// TODO 1.4
+	// Clear frame here
 
-		// Init shader program via additional function and bind it
-		program = await initShaders(gl, "shaders/simple.vert.glsl", "shaders/simple.frag.glsl");
-		gl.useProgram(program);
+	// TODO 1.5
+	// Render objects here
 
-		// TODO 2.3: Bestimme Locations der Shadervariablen für Model und View Matrix
-		// TODO 2.4: Erstelle mithilfe der Funktionen aus gl-matrix.js eine initiale View Matrix
-		viewMatrix = glMatrix.mat4.create();
+	// ...
 
-		// TODO 2.5: Übergebe die initiale View Matrix an den Shader
+	lastTimestamp = timestamp;
+	window.requestAnimationFrame(render);
+}
 
-		// TODO 2.9: Füge einen Event Listener für Tastatureingaben hinzu
-
-		let files = [
-			// TODO 1.1
-			// Add your trees and clouds here
-			// Load the island as ply object
-			"meshes/island.ply",
-			"meshes/Wolke.ply",
-			"meshes/Baum.ply"
-		];
-
-		let matrices = [
-			// TODO 1.2
-			// create model matrices for each object
-			glMatrix.mat4.create(),
-		];
-
-		// Render
-		// TODO 1.4
-		// Lösche den Frame vor dem zeichnen.
-		// Denke daran, die Funktion in die render Funktion zu verschieben.
-
-		// 1. Clear depth buffer before rendering
-		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-		for (let i = 0; i < files.length; i++) {
-			let mesh = await readMeshAsync(files[i], meshConverter);
-			console.log(mesh);
-
-			// TODO 1.3 Implementiere die Funktion setModelMatrix,
-			// welche die Model Matrix des jeweiligen Meshes setzt.
-			// mesh.setModelMatrix(matrices[i]);
-
-			meshes.push(mesh);
-		}
-
-		// TODO 1.5
-		// Rendere die Meshes innerhalb der render Funktion.
-		for (let i = 0; i < meshes.length; ++i) {
-			// TODO 2.7
-			// Call mesh update function here
-			meshes[i].render();
-		}
-
-		window.requestAnimationFrame(render);
-	};
-
-	function render(timestamp) {
-		const elapsed = timestamp - lastTimestamp;
-
-		// TODO 2.x
-		// Setze Camera View Matrix
-		// glMatrix.mat4.multiply(modelViewProjection, projectionMatrix, viewMatrix);
-		// let viewLoc = gl.getUniformLocation(program, "viewMatrix");
-		// gl.uniformMatrix4fv(viewLoc, false, modelViewProjection);
-
-		// TODO 1.4
-		// Clear frame here
-
-		// TODO 1.5
-		// Render objects here
-
-		// ...
-
-		lastTimestamp = timestamp;
-		window.requestAnimationFrame(render);
-	}
-
-	window.onload = async function () {
-		main();
-	};
+window.onload = async function () {
+	main();
+};
