@@ -3,13 +3,11 @@ in vec4 vPosition;
 in vec4 vColor;
 out vec4 vfColor;
 
-// Erstelle Uniform-Variable für die Model Matrix
+// TODO 2.1: Erstelle Uniform-Variable für die Model Matrix
 uniform mat4 modelMatrix;
 
-// Erstelle Uniform-Variable für die View-Matrix
+// TODO 2.1: Erstelle Uniform-Variable für die View-Matrix
 uniform mat4 viewMatrix;
-
-uniform mat4 projectionMatrix;
 
 void main()
 {
@@ -28,8 +26,7 @@ void main()
     vfColor = vColor;
 
     // TODO 2.2: Transformiere Vertexposition mit Model und View Matrix
-    gl_Position = viewMatrix * vPosition;
-    //gl_Position = projectionMatrix * viewMatrix * modelMatrix * vPosition;
-    //gl_Position = view * model * vPosition;
-    //gl_Position = viewMatrix * modelMatrix * vPosition;
+   // gl_Position = viewMatrix * vPosition;
+   // gl_Position = viewMatrix* (modelMatrix *  vPosition);
+        gl_Position = projectionMatrix * viewMatrix * modelMatrix * vPosition;
 }
