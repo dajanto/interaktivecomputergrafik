@@ -53,6 +53,7 @@ class Mesh {
 	// Erweitere die Klasse, so dass diese eine setModelMatrix Funktion bereitstellt.
 	setModelMatrix(mat) {
 		// TODO
+		this.modelMatrix = mat;
 	}
 
 	render() {
@@ -194,7 +195,7 @@ async function main() {
 	// TODO 2.3: Bestimme Locations der Shadervariablen für Model und View Matrix
 	// TODO 2.4: Erstelle mithilfe der Funktionen aus gl-matrix.js eine initiale View Matrix
 	viewMatrix = glMatrix.mat4.create();
-	//modelMatrix = glMatrix.mat4.create();
+	modelMatrix = glMatrix.mat4.create();
 
 	// TODO 2.5: Übergebe die initiale View Matrix an den Shader
 
@@ -228,7 +229,7 @@ async function main() {
 
 		// TODO 1.3 Implementiere die Funktion setModelMatrix,
 		// welche die Model Matrix des jeweiligen Meshes setzt.
-		// mesh.setModelMatrix(matrices[i]);
+		mesh.setModelMatrix(matrices[i]);
 
 		meshes.push(mesh);
 	}
