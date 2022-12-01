@@ -2,6 +2,9 @@
 in vec4 vPosition;
 in vec4 vColor;
 out vec4 vfColor;
+const vec3 iA = vec3(1.0,1.0,1.0);
+const vec3 kA = vec3(0.0,1.0,0.0);
+vec4 myColor = vec4(iA * kA, 1.0);
 
 // TODO 2.1: Erstelle Uniform-Variable für die Model Matrix
 uniform mat4 modelMatrix;
@@ -23,7 +26,8 @@ void main()
     //    -0.1767766922712326, -0.0589255653321743, -0.013334667310118675, 0,
     //    0, 0, -0.8801880478858948, 1);
         
-    vfColor = vColor;
+    //vfColor = vColor * myColor;
+    vfColor = myColor;
 
     // TODO 2.2: Transformiere Vertexposition mit Model und View Matrix
    // gl_Position = viewMatrix * vPosition;
