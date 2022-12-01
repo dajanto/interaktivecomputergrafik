@@ -18,6 +18,7 @@ let modelViewProjection = glMatrix.mat4.create();
 
 
 class Mesh {
+
 	constructor (positions, colors, indices) {
 		this.positions = positions;
 		this.colors = colors;
@@ -49,6 +50,14 @@ class Mesh {
 		
 		// Fill VBO with indices
 		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint32Array(this.indices), gl.STATIC_DRAW);
+
+		// TODO
+		// Create VBO for normals and activate it
+		this.normalsVBO = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, this.normals);
+
+		// Fill VBO with normals
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.normals), gl.STATIC_DRAW);
 	}
 	
 	update() {
@@ -94,6 +103,7 @@ class Mesh {
 function meshConverter(model) {
 	// 1. Get positions from the cube
 	let positions = model.meshes[0].vertices;
+	let normals = model.meshes[0].normals;
 
 	// 2. Generate colors for the cube
 	let colors;
