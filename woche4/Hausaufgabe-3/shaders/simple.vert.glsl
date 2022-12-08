@@ -29,7 +29,9 @@ void main()
 
     //vfColor = vColor * myColor;
     vfColor = myColor;
-    vNormal = normal;
+    //vNormal
+    vfColor = vec4(vNormal.xyz,1.0);
+
 
     // TODO 2.2: Transformiere Vertexposition mit Model und View Matrix
     // gl_Position = viewMatrix * vPosition;

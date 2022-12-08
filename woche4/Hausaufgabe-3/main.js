@@ -17,11 +17,12 @@ let modelViewProjection = glMatrix.mat4.create();
 
 class Mesh {
 
-    constructor(positions, colors, indices) {
+    constructor(positions, colors, indices, normals) {
         this.positions = positions;
         this.colors = colors;
         this.indices = indices;
         this.initalized = false;
+        this.normals = normals;
         this.modelMatrix = glMatrix.mat4.create();
     }
 
@@ -52,7 +53,7 @@ class Mesh {
         // TODO
         // Create VBO for normals and activate it
         this.normalsVBO = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.normals);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.normalsVBO);
 
         // Fill VBO with normals
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.normals), gl.STATIC_DRAW);
@@ -95,6 +96,11 @@ class Mesh {
 
         // 4. Match number of vertices to size of new positions array
         gl.drawElements(gl.TRIANGLES, this.indices.length, gl.UNSIGNED_INT, 0);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.normalsVBO);
+        const normalsLoc = gl.getAttribLocation(program, 'vNormals');
+        gl.enableVertexAttribArray(normalsLoc);
+        gl.vertexAttribPointer(normalsLoc, 3, gl.FLOAT, false, 0, 0);
     }
 }
 
@@ -135,7 +141,7 @@ function meshConverter(model) {
     n++;
     // 3. Get indices from the cube and flatten them
     let indices = model.meshes[0].faces.flat();
-    return new Mesh(positions, colors, indices);
+    return new Mesh(positions, colors, indices, normals);
 }
 
 // TODO 2.8: Erstelle einen Event-Handler, der anhand von WASD-Tastatureingaben
@@ -248,7 +254,6 @@ async function main() {
 
         meshes.push(mesh);
     }
-
 
     window.requestAnimationFrame(render);
 };
