@@ -98,7 +98,7 @@ class Mesh {
         gl.drawElements(gl.TRIANGLES, this.indices.length, gl.UNSIGNED_INT, 0);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.normalsVBO);
-        const normalsLoc = gl.getAttribLocation(program, 'vNormals');
+        const normalsLoc = gl.getAttribLocation(program, 'vNormal');
         gl.enableVertexAttribArray(normalsLoc);
         gl.vertexAttribPointer(normalsLoc, 3, gl.FLOAT, false, 0, 0);
     }
@@ -215,10 +215,10 @@ async function main() {
         // TODO 1.1
         // Add your trees and clouds here
         "meshes/island.ply",
-        "meshes/Wolkesmall.ply",
-        "meshes/Wolkesmall.ply",
-        "meshes/Baummini.ply",
-        "meshes/Baummini.ply"
+        "meshes/Wolke.ply",
+        "meshes/Wolke.ply",
+        "meshes/Baum.ply",
+        "meshes/Baum.ply"
 
     ];
 
