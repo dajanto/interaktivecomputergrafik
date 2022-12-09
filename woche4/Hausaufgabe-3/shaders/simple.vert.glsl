@@ -4,7 +4,7 @@ in vec4 vColor;
 in vec3 vNormal;
 
 // TODO statische lichtquelle
-//in vec3 lightSource = vec3(0,5,3);
+//in vec3 lightSource;
 vec3 lightSource = vec3(0,5,3);
 
 out vec4 vfColor;
