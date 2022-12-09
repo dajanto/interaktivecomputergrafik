@@ -9,7 +9,7 @@ vec3 lightSource = vec3(0,5,3);
 out vec4 vfColor;
 const vec3 iA = vec3(0.0,0.0,0.8);
 const vec3 kA = vec3(0.2,0.2,0.2);
-vec3 ambientLight = vec3(iA * kA);
+vec4 ambientLight = vec4(iA * kA,0.0);
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
@@ -37,14 +37,14 @@ void main()
     //    0, 0, -0.8801880478858948, 1);
 
     //vfColor = vColor * myColor;
-    vfColor = vec4(ambientLight,1.0);
+    //vfColor = ambientLight;
     //vfColor = vec4(vNormal.xyz,1.0);
 
     vec3 lightDir = lightSource + vPosition.xyz;
     float diff = max(dot(vNormal, lightDir), 0.0);
     vec3 diffuse = diff * vColor.xyz;
-    vec3 result = (ambientLight + diffuse) * vColor.xyz;
-    vfColor = vec4(result,0.0);
+    vec3 result = (ambientLight.xyz + diffuse) * vColor.xyz;
+    vfColor = vec4(result,1.0);
 
     // gl_Position = viewMatrix * vPosition;
     // gl_Position = viewMatrix* (modelMatrix *  vPosition);
