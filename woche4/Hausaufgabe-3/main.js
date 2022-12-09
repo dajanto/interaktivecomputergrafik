@@ -13,6 +13,7 @@ let lastTimestamp = 0.0;
 let viewMatrix = glMatrix.mat4.create();
 let projectionMatrix = glMatrix.mat4.create();
 let modelViewProjection = glMatrix.mat4.create();
+// TODO
 let lichtquelle = [0,5,3];
 
 class Mesh {
@@ -56,6 +57,8 @@ class Mesh {
 
         // Fill VBO with normals
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.normals), gl.STATIC_DRAW);
+
+        // TODO lichtquelle vbo?
     }
 
 
@@ -101,6 +104,8 @@ class Mesh {
         const normalsLoc = gl.getAttribLocation(program, 'vNormal');
         gl.enableVertexAttribArray(normalsLoc);
         gl.vertexAttribPointer(normalsLoc, 3, gl.FLOAT, false, 0, 0);
+
+        // TODO bind lichtquelle?
     }
 }
 

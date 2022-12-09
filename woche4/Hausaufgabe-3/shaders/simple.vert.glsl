@@ -3,6 +3,7 @@ in vec4 vPosition;
 in vec4 vColor;
 in vec3 vNormal;
 
+// TODO statische lichtquelle
 in vec3 lightSource = vec3(0,5,3);
 
 out vec4 vfColor;
@@ -39,6 +40,7 @@ void main()
     //vfColor = ambientLight;
     //vfColor = vec4(vNormal.xyz,1.0);
 
+    // TODO diffuses licht
     vec3 lightDir = lightSource + vPosition.xyz;
     float diff = max(dot(vNormal, lightDir), 0.0);
     vec3 diffuse = diff * vColor.xyz;
