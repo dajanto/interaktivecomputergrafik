@@ -13,7 +13,7 @@ let lastTimestamp = 0.0;
 let viewMatrix = glMatrix.mat4.create();
 let projectionMatrix = glMatrix.mat4.create();
 let modelViewProjection = glMatrix.mat4.create();
-
+let lichtquelle = [0,5,3];
 
 class Mesh {
 
@@ -50,7 +50,6 @@ class Mesh {
         // Fill VBO with indices
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint32Array(this.indices), gl.STATIC_DRAW);
 
-        // TODO
         // Create VBO for normals and activate it
         this.normalsVBO = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this.normalsVBO);
@@ -58,6 +57,7 @@ class Mesh {
         // Fill VBO with normals
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.normals), gl.STATIC_DRAW);
     }
+
 
     update() {
         // TODO 2.6

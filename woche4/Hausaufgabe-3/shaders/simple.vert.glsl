@@ -1,17 +1,26 @@
 #version 300 es
 in vec4 vPosition;
 in vec4 vColor;
-in vec4 vNormal;
+in vec3 vNormal;
+
+//in vec3 lightSource = vec3(0,5,3);
+vec3 lightSource = vec3(0,5,3);
+
 out vec4 vfColor;
 const vec3 iA = vec3(0.0,0.0,0.8);
 const vec3 kA = vec3(0.2,0.2,0.2);
-vec4 myColor = vec4(iA * kA, 1.0);
+vec3 ambientLight = vec3(iA * kA);
 
-// TODO 2.1: Erstelle Uniform-Variable für die Model Matrix
 uniform mat4 modelMatrix;
-
-// TODO 2.1: Erstelle Uniform-Variable für die View-Matrix
 uniform mat4 viewMatrix;
+
+float max3 (vec3 v) {
+    return max (max (v.x, v.y), v.z);
+}
+
+float max4 (vec4 v) {
+    return max (max (v.x, v.y), max(v.z, v.w));
+}
 
 void main()
 {
@@ -28,12 +37,15 @@ void main()
     //    0, 0, -0.8801880478858948, 1);
 
     //vfColor = vColor * myColor;
-    vfColor = myColor;
-    //vNormal
-    vfColor = vec4(vNormal.xyz,1.0);
+    vfColor = vec4(ambientLight,1.0);
+    //vfColor = vec4(vNormal.xyz,1.0);
 
+    vec3 lightDir = lightSource + vPosition.xyz;
+    float diff = max(dot(vNormal, lightDir), 0.0);
+    vec3 diffuse = diff * vColor.xyz;
+    vec3 result = (ambientLight + diffuse) * vColor.xyz;
+    vfColor = vec4(result,0.0);
 
-    // TODO 2.2: Transformiere Vertexposition mit Model und View Matrix
     // gl_Position = viewMatrix * vPosition;
     // gl_Position = viewMatrix* (modelMatrix *  vPosition);
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vPosition;
