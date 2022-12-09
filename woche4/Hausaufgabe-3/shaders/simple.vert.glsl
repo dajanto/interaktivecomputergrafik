@@ -3,8 +3,7 @@ in vec4 vPosition;
 in vec4 vColor;
 in vec3 vNormal;
 
-//in vec3 lightSource = vec3(0,5,3);
-vec3 lightSource = vec3(0,5,3);
+in vec3 lightSource = vec3(0,5,3);
 
 out vec4 vfColor;
 const vec3 iA = vec3(0.0,0.0,0.8);
