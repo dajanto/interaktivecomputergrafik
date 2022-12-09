@@ -5,7 +5,7 @@ in vec3 vNormal;
 
 // TODO statische lichtquelle
 //in vec3 lightSource;
-vec3 lightSource = vec3(0,5,3);
+vec3 lightSource = vec3(0,5,1);
 
 out vec4 vfColor;
 const vec3 iA = vec3(0.0,0.0,0.8);
@@ -42,11 +42,15 @@ void main()
     //vfColor = vec4(vNormal.xyz,1.0);
 
     // TODO diffuses licht
-    vec3 lightDir = lightSource + vPosition.xyz;
-    float diff = max(dot(vNormal, lightDir), 0.0);
-    vec3 diffuse = diff * vColor.xyz;
-    vec3 result = (ambientLight.xyz + diffuse) * vColor.xyz;
-    vfColor = vec4(result,1.0);
+    vec3 lightDir = lightSource - vPosition.xyz;
+
+    vec3 NL = vNormal * lightDir;
+    float max = max4(vec4(0.0,NL));
+
+    vec3 diffuse = max * vColor.xyz;
+
+    vec3 ambientDiffus = (ambientLight.xyz + diffuse) * vColor.xyz;
+    vfColor = vec4(ambientDiffus,1.0);
 
     // gl_Position = viewMatrix * vPosition;
     // gl_Position = viewMatrix* (modelMatrix *  vPosition);
