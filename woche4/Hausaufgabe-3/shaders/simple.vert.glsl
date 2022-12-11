@@ -18,14 +18,6 @@ vec4 ambientLight = vec4(iA * kA,0.0);
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 
-float max3 (vec3 v) {
-    return max (max (v.x, v.y), v.z);
-}
-
-float max4 (vec4 v) {
-    return max (max (v.x, v.y), max(v.z, v.w));
-}
-
 void main()
 {
     const mat4 projectionMatrix = mat4(
@@ -40,19 +32,13 @@ void main()
     //    -0.1767766922712326, -0.0589255653321743, -0.013334667310118675, 0,
     //    0, 0, -0.8801880478858948, 1);
 
-    //vfColor = vColor * myColor;
-    //vfColor = ambientLight;
-    //vfColor = vec4(vNormal.xyz,1.0);
-
     // TODO diffuses licht
     vec3 lightDir = normalize(lightSource - vPosition.xyz);
-    float maxNL = max(0.0,dot(vNormal,lightDir));
+    float maxNL = max(0.0,dot(vNormal,-lightDir));
     vec3 diffuse = iD * kD * maxNL;
-
-    vec3 ambientDiffus = ambientLight.xyz + diffuse;
+    float ambientLightStrength = 1.0;
+    vec3 ambientDiffus = (ambientLightStrength * ambientLight.xyz) + diffuse;
     vfColor = vec4(ambientDiffus,1.0);
 
-    // gl_Position = viewMatrix * vPosition;
-    // gl_Position = viewMatrix* (modelMatrix *  vPosition);
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vPosition;
 }
