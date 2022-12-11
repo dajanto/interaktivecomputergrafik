@@ -10,6 +10,7 @@ vec3 lightSource = vec3(0,5,3);
 out vec4 vfColor;
 const vec3 iA = vec3(0.0,0.0,0.8);
 const vec3 kA = vec3(0.2,0.2,0.2);
+// TODO id kd ins anwendungsprogramm
 const vec3 iD = vec3(0.1,0.1,0.5);
 const vec3 kD = vec3(0.8,0.0,0.8);
 vec4 ambientLight = vec4(iA * kA,0.0);
@@ -44,15 +45,11 @@ void main()
     //vfColor = vec4(vNormal.xyz,1.0);
 
     // TODO diffuses licht
-    vec3 lightDir = lightSource - vPosition.xyz;
+    vec3 lightDir = normalize(lightSource - vPosition.xyz);
+    float maxNL = max(0.0,dot(vNormal,lightDir));
+    vec3 diffuse = iD * kD * maxNL;
 
-    vec3 NL = vNormal * lightDir;
-    float max = max4(vec4(0.0,NL));
-
-    //vec3 diffuse = max * vColor.xyz;
-    vec3 diffuse = iD * kD * max;
-
-    vec3 ambientDiffus = (ambientLight.xyz + diffuse);
+    vec3 ambientDiffus = ambientLight.xyz + diffuse;
     vfColor = vec4(ambientDiffus,1.0);
 
     // gl_Position = viewMatrix * vPosition;
