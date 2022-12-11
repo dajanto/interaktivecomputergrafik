@@ -12,9 +12,11 @@ out vec4 vfColor;
 // ambient
 const vec3 iA = vec3(0.0,0.0,0.8);
 const vec3 kA = vec3(0.2,0.2,0.2);
+
 // TODO diffuse: id kd ins anwendungsprogramm
 const vec3 iD = vec3(0.1,0.1,0.5);
 const vec3 kD = vec3(0.8,0.0,0.8);
+
 // TODO specular: is ks ins anwendungsprogramm
 const vec3 iS = vec3(1.0,0.0,1.0);
 const vec3 kS = vec3(0.1,0.0,0.7);
@@ -37,7 +39,7 @@ void main()
     //    0, 0, -0.8801880478858948, 1);
 
     // ambient light
-    float ambientLightStrength = 0.5;
+    float ambientLightStrength = 1.0;
     vec4 ambientLight = vec4(iA * kA,0.0);
 
     // TODO diffuse light
@@ -51,7 +53,7 @@ void main()
     vec3 view = vec3(0,5,3);
     vec3 viewDir = normalize(view - vPosition.xyz);
     vec3 reflectDir = reflect(-lightDir, vNormal);
-    int power = 32;
+    float power = 32.0;
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), power);
     float specularStrength = 1.0;
     vec3 specular = specularStrength * spec * vColor.xyz;
