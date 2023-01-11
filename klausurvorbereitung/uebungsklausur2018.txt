@@ -1,0 +1,23 @@
+Gegeben eine Geometrische Form. Stellen sie die Form als B-Rep da
+
+Eine Translation die man ausführen musste (ähnlich die auf der Übungsklausur)
+
+Gegebenes Bild (Quadrat) und man musste sagen welche der beiden Techniken das ist und warum. (Ich glaube, Parallax Occlusion oder Sampled Displacment Mapping)
+
+4 Zeilen WebGL Code und die Frage was macht er und wofür kann man nur den Fragment Shader nutzen?
+
+Eine Abbildung vom Objektraum in Texturraum ausschen (4 gegeben welche ist richtig)
+
+Ein Trianglestrip wurde gegeben - welche der 4 Formen ist es bei den gegeben Eckpunkten
+
+Umwandlung ins Kamerakoordinatensystem - zeige die 3 Schritte
+
+Diverse MC (jeweils nur eine Antwort und zwischen 1 und 3 pkt. Die waren definitiv zum Punkte sammeln)
+
+Phong Gleichung aufschreiben und eine Zeichung machen und was kleines ausrechnen damit
+
+Eine Kurve berechnen mit einem Punkt Q 0.75
+
+Was ist eine Eulerische Kurve (oder so)
+
+Nenne 2 Vorteile warum man Objekte nicht sofort ins Weltkoordinatensystem wirft
