@@ -6,7 +6,9 @@ alpha = (0,1)
 beta = (0,0)
 gamma = (1,1)
 
-
+A = intensität zwischen i0 und i1
+A = intensität zwischen i0 und i2
+I = intensität des betrachtenden fragments
 
 
 
